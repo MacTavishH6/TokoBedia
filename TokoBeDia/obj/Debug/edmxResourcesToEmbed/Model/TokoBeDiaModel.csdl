@@ -1,0 +1,137 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="TokoBeDiaModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityType Name="MsProduct">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="ProductTypeID" Type="Int32" Nullable="false" />
+    <Property Name="Name" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+    <Property Name="Price" Type="Int32" />
+    <Property Name="Stock" Type="Int32" />
+    <NavigationProperty Name="TrDetailTransactions" Relationship="Self.FK__TrDetailT__Produ__300424B4" FromRole="MsProducts" ToRole="TrDetailTransactions" />
+  </EntityType>
+  <EntityType Name="MsProductType">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" />
+    <Property Name="Name" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+    <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+  </EntityType>
+  <EntityType Name="MsRole">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" />
+    <Property Name="Name" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+    <NavigationProperty Name="MsUsers" Relationship="Self.FK__MsUsers__RoleID__25869641" FromRole="MsRoles" ToRole="MsUsers" />
+  </EntityType>
+  <EntityType Name="MsUser">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="RoleID" Type="Int32" Nullable="false" />
+    <Property Name="Name" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+    <Property Name="Email" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+    <Property Name="Password" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+    <Property Name="Gender" Type="String" MaxLength="6" FixedLength="false" Unicode="false" />
+    <Property Name="Status" Type="String" MaxLength="1" FixedLength="true" Unicode="false" />
+    <NavigationProperty Name="MsRole" Relationship="Self.FK__MsUsers__RoleID__25869641" FromRole="MsUsers" ToRole="MsRoles" />
+    <NavigationProperty Name="TrHeaderTransactions" Relationship="Self.FK__TrHeaderT__UserI__2C3393D0" FromRole="MsUsers" ToRole="TrHeaderTransactions" />
+  </EntityType>
+  <EntityType Name="TrDetailTransaction">
+    <Key>
+      <PropertyRef Name="TransactionID" />
+      <PropertyRef Name="ProductID" />
+    </Key>
+    <Property Name="TransactionID" Type="Int32" Nullable="false" />
+    <Property Name="ProductID" Type="Int32" Nullable="false" />
+    <Property Name="Quantity" Type="Int32" />
+    <NavigationProperty Name="MsProduct" Relationship="Self.FK__TrDetailT__Produ__300424B4" FromRole="TrDetailTransactions" ToRole="MsProducts" />
+    <NavigationProperty Name="TrHeaderTransaction" Relationship="Self.FK__TrDetailT__Trans__2F10007B" FromRole="TrDetailTransactions" ToRole="TrHeaderTransactions" />
+  </EntityType>
+  <EntityType Name="TrHeaderTransaction">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="UserID" Type="Int32" Nullable="false" />
+    <Property Name="Date" Type="DateTime" Precision="0" />
+    <NavigationProperty Name="MsUser" Relationship="Self.FK__TrHeaderT__UserI__2C3393D0" FromRole="TrHeaderTransactions" ToRole="MsUsers" />
+    <NavigationProperty Name="TrDetailTransactions" Relationship="Self.FK__TrDetailT__Trans__2F10007B" FromRole="TrHeaderTransactions" ToRole="TrDetailTransactions" />
+  </EntityType>
+  <Association Name="FK__TrDetailT__Produ__300424B4">
+    <End Role="MsProducts" Type="Self.MsProduct" Multiplicity="1" />
+    <End Role="TrDetailTransactions" Type="Self.TrDetailTransaction" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="MsProducts">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="TrDetailTransactions">
+        <PropertyRef Name="ProductID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__MsUsers__RoleID__25869641">
+    <End Role="MsRoles" Type="Self.MsRole" Multiplicity="1" />
+    <End Role="MsUsers" Type="Self.MsUser" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="MsRoles">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="MsUsers">
+        <PropertyRef Name="RoleID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__TrHeaderT__UserI__2C3393D0">
+    <End Role="MsUsers" Type="Self.MsUser" Multiplicity="1" />
+    <End Role="TrHeaderTransactions" Type="Self.TrHeaderTransaction" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="MsUsers">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="TrHeaderTransactions">
+        <PropertyRef Name="UserID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__TrDetailT__Trans__2F10007B">
+    <End Role="TrHeaderTransactions" Type="Self.TrHeaderTransaction" Multiplicity="1" />
+    <End Role="TrDetailTransactions" Type="Self.TrDetailTransaction" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="TrHeaderTransactions">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="TrDetailTransactions">
+        <PropertyRef Name="TransactionID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="TokoBeDiaEntities" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="MsProducts" EntityType="Self.MsProduct" />
+    <EntitySet Name="MsProductTypes" EntityType="Self.MsProductType" />
+    <EntitySet Name="MsRoles" EntityType="Self.MsRole" />
+    <EntitySet Name="MsUsers" EntityType="Self.MsUser" />
+    <EntitySet Name="TrDetailTransactions" EntityType="Self.TrDetailTransaction" />
+    <EntitySet Name="TrHeaderTransactions" EntityType="Self.TrHeaderTransaction" />
+    <AssociationSet Name="FK__TrDetailT__Produ__300424B4" Association="Self.FK__TrDetailT__Produ__300424B4">
+      <End Role="MsProducts" EntitySet="MsProducts" />
+      <End Role="TrDetailTransactions" EntitySet="TrDetailTransactions" />
+    </AssociationSet>
+    <AssociationSet Name="FK__MsUsers__RoleID__25869641" Association="Self.FK__MsUsers__RoleID__25869641">
+      <End Role="MsRoles" EntitySet="MsRoles" />
+      <End Role="MsUsers" EntitySet="MsUsers" />
+    </AssociationSet>
+    <AssociationSet Name="FK__TrHeaderT__UserI__2C3393D0" Association="Self.FK__TrHeaderT__UserI__2C3393D0">
+      <End Role="MsUsers" EntitySet="MsUsers" />
+      <End Role="TrHeaderTransactions" EntitySet="TrHeaderTransactions" />
+    </AssociationSet>
+    <AssociationSet Name="FK__TrDetailT__Trans__2F10007B" Association="Self.FK__TrDetailT__Trans__2F10007B">
+      <End Role="TrHeaderTransactions" EntitySet="TrHeaderTransactions" />
+      <End Role="TrDetailTransactions" EntitySet="TrDetailTransactions" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>

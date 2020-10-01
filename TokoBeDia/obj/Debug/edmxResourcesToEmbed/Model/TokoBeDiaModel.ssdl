@@ -1,0 +1,129 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="TokoBeDiaModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityType Name="MsProducts">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="ProductTypeID" Type="int" Nullable="false" />
+    <Property Name="Name" Type="varchar" MaxLength="200" />
+    <Property Name="Price" Type="int" />
+    <Property Name="Stock" Type="int" />
+  </EntityType>
+  <EntityType Name="MsProductTypes">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="int" Nullable="false" />
+    <Property Name="Name" Type="varchar" MaxLength="200" />
+    <Property Name="Description" Type="varchar(max)" />
+  </EntityType>
+  <EntityType Name="MsRoles">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="int" Nullable="false" />
+    <Property Name="Name" Type="varchar" MaxLength="200" />
+  </EntityType>
+  <EntityType Name="MsUsers">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="RoleID" Type="int" Nullable="false" />
+    <Property Name="Name" Type="varchar" MaxLength="200" />
+    <Property Name="Email" Type="varchar" MaxLength="200" />
+    <Property Name="Password" Type="varchar" MaxLength="200" />
+    <Property Name="Gender" Type="varchar" MaxLength="6" />
+    <Property Name="Status" Type="char" MaxLength="1" />
+  </EntityType>
+  <EntityType Name="TrDetailTransactions">
+    <Key>
+      <PropertyRef Name="TransactionID" />
+      <PropertyRef Name="ProductID" />
+    </Key>
+    <Property Name="TransactionID" Type="int" Nullable="false" />
+    <Property Name="ProductID" Type="int" Nullable="false" />
+    <Property Name="Quantity" Type="int" />
+  </EntityType>
+  <EntityType Name="TrHeaderTransactions">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="UserID" Type="int" Nullable="false" />
+    <Property Name="Date" Type="date" />
+  </EntityType>
+  <Association Name="FK__MsUsers__RoleID__25869641">
+    <End Role="MsRoles" Type="Self.MsRoles" Multiplicity="1" />
+    <End Role="MsUsers" Type="Self.MsUsers" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="MsRoles">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="MsUsers">
+        <PropertyRef Name="RoleID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__TrDetailT__Produ__300424B4">
+    <End Role="MsProducts" Type="Self.MsProducts" Multiplicity="1" />
+    <End Role="TrDetailTransactions" Type="Self.TrDetailTransactions" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="MsProducts">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="TrDetailTransactions">
+        <PropertyRef Name="ProductID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__TrDetailT__Trans__2F10007B">
+    <End Role="TrHeaderTransactions" Type="Self.TrHeaderTransactions" Multiplicity="1" />
+    <End Role="TrDetailTransactions" Type="Self.TrDetailTransactions" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="TrHeaderTransactions">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="TrDetailTransactions">
+        <PropertyRef Name="TransactionID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__TrHeaderT__UserI__2C3393D0">
+    <End Role="MsUsers" Type="Self.MsUsers" Multiplicity="1" />
+    <End Role="TrHeaderTransactions" Type="Self.TrHeaderTransactions" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="MsUsers">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="TrHeaderTransactions">
+        <PropertyRef Name="UserID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="TokoBeDiaModelStoreContainer">
+    <EntitySet Name="MsProducts" EntityType="Self.MsProducts" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="MsProductTypes" EntityType="Self.MsProductTypes" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="MsRoles" EntityType="Self.MsRoles" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="MsUsers" EntityType="Self.MsUsers" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="TrDetailTransactions" EntityType="Self.TrDetailTransactions" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="TrHeaderTransactions" EntityType="Self.TrHeaderTransactions" Schema="dbo" store:Type="Tables" />
+    <AssociationSet Name="FK__MsUsers__RoleID__25869641" Association="Self.FK__MsUsers__RoleID__25869641">
+      <End Role="MsRoles" EntitySet="MsRoles" />
+      <End Role="MsUsers" EntitySet="MsUsers" />
+    </AssociationSet>
+    <AssociationSet Name="FK__TrDetailT__Produ__300424B4" Association="Self.FK__TrDetailT__Produ__300424B4">
+      <End Role="MsProducts" EntitySet="MsProducts" />
+      <End Role="TrDetailTransactions" EntitySet="TrDetailTransactions" />
+    </AssociationSet>
+    <AssociationSet Name="FK__TrDetailT__Trans__2F10007B" Association="Self.FK__TrDetailT__Trans__2F10007B">
+      <End Role="TrHeaderTransactions" EntitySet="TrHeaderTransactions" />
+      <End Role="TrDetailTransactions" EntitySet="TrDetailTransactions" />
+    </AssociationSet>
+    <AssociationSet Name="FK__TrHeaderT__UserI__2C3393D0" Association="Self.FK__TrHeaderT__UserI__2C3393D0">
+      <End Role="MsUsers" EntitySet="MsUsers" />
+      <End Role="TrHeaderTransactions" EntitySet="TrHeaderTransactions" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>
